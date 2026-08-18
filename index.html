@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estimulación Cognitiva para Adultos - Sesión 2</title>
+<style>
+  :root{
+    --primary:#4f46e5;
+    --primary-dark:#3730a3;
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --text:#1f2937;
+    --muted:#6b7280;
+    --success:#15803d;
+    --danger:#b91c1c;
+    --border:#dbe2ea;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+  }
+  .app{max-width:1100px;margin:auto;padding:20px}
+  .header{
+    background:var(--card);border-radius:18px;padding:22px;
+    box-shadow:0 5px 20px rgba(0,0,0,.06);margin-bottom:18px
+  }
+  h1{margin:0 0 6px;font-size:28px}
+  h2{margin-top:0}
+  .subtitle{color:var(--muted)}
+  .progress{display:flex;gap:8px;margin-top:18px}
+  .step{flex:1;padding:10px;border-radius:10px;background:#e8ebf2;text-align:center;font-weight:700;font-size:13px}
+  .step.active{background:var(--primary);color:white}
+  .step.done{background:#dcfce7;color:var(--success)}
+  .card{
+    background:var(--card);border-radius:18px;padding:24px;
+    box-shadow:0 5px 20px rgba(0,0,0,.06);margin-bottom:18px
+  }
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  label{font-weight:700;font-size:14px}
+  input{
+    width:100%;padding:12px;margin-top:7px;border:1px solid var(--border);
+    border-radius:10px;font-size:16px
+  }
+  button{
+    border:0;border-radius:11px;padding:12px 18px;font-size:16px;
+    font-weight:700;cursor:pointer
+  }
+  .primary{background:var(--primary);color:#fff}
+  .primary:hover{background:var(--primary-dark)}
+  .secondary{background:#e8ebf2;color:var(--text)}
+  .danger{background:#fee2e2;color:var(--danger)}
+  .actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;flex-wrap:wrap}
+  .instruction{
+    background:#eef2ff;border-left:5px solid var(--primary);
+    padding:14px;border-radius:10px;margin:14px 0 20px
+  }
+  .timer{text-align:center;font-size:28px;font-weight:800;margin:8px 0 18px}
+  .counter{text-align:center;color:var(--muted);margin-bottom:14px}
+  .number-grid{
+    display:grid;grid-template-columns:repeat(15,1fr);gap:6px;
+    max-width:950px;margin:auto
+  }
+  .number-grid button{
+    padding:12px 4px;background:#fff;border:2px solid transparent;
+    font-size:22px;color:#111827;border-radius:8px
+  }
+  .number-grid button:hover{background:#eef2ff}
+  .number-grid button.selected{background:#dbeafe;border-color:var(--primary);color:var(--primary-dark)}
+  .number-grid button.correct{background:#dcfce7;border-color:#16a34a}
+  .number-grid button.incorrect{background:#fee2e2;border-color:#dc2626}
+  .shape-grid{
+    display:grid;grid-template-columns:repeat(12,1fr);gap:10px;
+    max-width:950px;margin:auto
+  }
+  .shape-btn{
+    height:58px;background:#fff;border:2px solid transparent;
+    display:flex;align-items:center;justify-content:center;border-radius:9px
+  }
+  .shape-btn.selected{background:#dbeafe;border-color:var(--primary)}
+  .shape{
+    width:31px;height:31px;display:block;background:#3730a3
+  }
+  .rectangle{width:42px;height:20px}
+  .diamond{transform:rotate(45deg);width:25px;height:25px}
+  .circle{border-radius:50%}
+  .triangle{
+    width:0;height:0;background:transparent;
+    border-left:17px solid transparent;border-right:17px solid transparent;
+    border-bottom:31px solid #3730a3
+  }
+  .square{width:31px;height:31px}
+  .cross{position:relative;background:transparent}
+  .cross:before,.cross:after{content:"";position:absolute;background:#3730a3}
+  .cross:before{width:31px;height:10px;left:0;top:10px}
+  .cross:after{width:10px;height:31px;left:10px;top:0}
+  .star{font-size:35px;color:#3730a3;line-height:1}
+  .club{font-size:35px;color:#3730a3;line-height:1}
+  .banana-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:18px;
+    max-width:850px;margin:auto
+  }
+  .object-btn{
+    min-height:120px;background:#fff;border:3px solid transparent;
+    border-radius:14px;display:flex;align-items:center;justify-content:center;
+    font-size:64px;cursor:pointer
+  }
+  .object-btn.selected{background:#eef2ff;border-color:var(--primary)}
+  .result-box{text-align:center;padding:20px;border-radius:14px;background:#f8fafc}
+  .result-score{font-size:42px;font-weight:900;color:var(--primary)}
+  .small{font-size:13px;color:var(--muted)}
+  .hidden{display:none!important}
+  .status{
+    position:fixed;right:18px;bottom:18px;max-width:360px;
+    padding:13px 16px;border-radius:12px;color:#fff;display:none;
+    box-shadow:0 8px 25px rgba(0,0,0,.18);z-index:50
+  }
+  .status.success{background:#15803d}
+  .status.error{background:#b91c1c}
+  .status.info{background:#334155}
+  @media(max-width:800px){
+    .grid{grid-template-columns:1fr}
+    .number-grid{grid-template-columns:repeat(10,1fr)}
+    .shape-grid{grid-template-columns:repeat(6,1fr)}
+  }
+  @media(max-width:520px){
+    .app{padding:10px}
+    .card{padding:16px}
+    .number-grid{grid-template-columns:repeat(5,1fr)}
+    .shape-grid{grid-template-columns:repeat(4,1fr)}
+    .banana-grid{grid-template-columns:repeat(2,1fr)}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>Estimulación Cognitiva para Adultos</h1>
+    <div class="subtitle">Sesión 2 · Actividades de atención visual</div>
+    <div class="progress">
+      <div id="step0" class="step active">1. Datos</div>
+      <div id="step1" class="step">2. Página 07</div>
+      <div id="step2" class="step">3. Página 08</div>
+      <div id="step3" class="step">4. Página 05</div>
+      <div id="step4" class="step">5. Resultado</div>
+    </div>
+  </div>
+
+  <section id="screenData" class="card">
+    <h2>Datos del participante</h2>
+    <p class="subtitle">Estos datos se guardarán junto con los resultados de las actividades.</p>
+    <div class="grid">
+      <div>
+        <label for="participantId">Código del participante *</label>
+        <input id="participantId" placeholder="Ej. P001" maxlength="30" required>
+      </div>
+      <div>
+        <label for="participantName">Nombre o alias</label>
+        <input id="participantName" placeholder="Ej. María" maxlength="80">
+      </div>
+      <div>
+        <label for="age">Edad</label>
+        <input id="age" type="number" min="1" max="120" placeholder="Ej. 68">
+      </div>
+      <div>
+        <label for="session">Sesión</label>
+        <input id="session" value="2" readonly>
+      </div>
+    </div>
+    <div class="instruction">
+      <strong>Importante:</strong> la persona debe realizar las actividades sin ayuda. El sistema medirá automáticamente el tiempo y las respuestas seleccionadas.
+    </div>
+    <div class="actions">
+      <button class="primary" onclick="startSession()">Comenzar sesión</button>
+    </div>
+  </section>
+
+  <section id="screenActivity" class="card hidden">
+    <div id="activityContent"></div>
+    <div class="actions">
+      <button class="secondary" onclick="resetCurrentActivity()">Reiniciar actividad</button>
+      <button id="finishActivityBtn" class="primary" onclick="finishActivity()">Terminar actividad</button>
+    </div>
+  </section>
+
+  <section id="screenResult" class="card hidden">
+    <h2>Sesión finalizada</h2>
+    <div id="resultContent"></div>
+    <div class="actions">
+      <button class="primary" onclick="submitResults()">Enviar resultados</button>
+    </div>
+    <p id="submitNote" class="small"></p>
+  </section>
+</div>
+
+<div id="status" class="status"></div>
+
+<script>
+/*
+  PEGA AQUÍ LA URL DE TU WEB APP DE GOOGLE APPS SCRIPT.
+  Ejemplo:
+  const SCRIPT_URL = "https://script.google.com/macros/s/XXXXXXXXXXXX/exec";
+*/
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6YgXdxHYeqqFJkwI9XLfXlhgpc0hhFtQZVlR6RuWh9G09o0JOE2qUOL3DdVY95ZNL9g/exec";
+
+const activities = [
+  {
+    page: "07",
+    name: "Encuentra todos los números 7",
+    type: "numbers",
+    targetLabel: "7",
+    targetCount: 15,
+    data: [
+      6,1,7,5,0,4,9,8,0,7,6,8,9,8,0,
+      4,9,0,3,2,1,7,5,2,8,4,3,5,7,3,
+      7,5,2,8,6,8,5,1,4,5,1,0,2,3,9,
+      9,2,8,1,7,3,4,6,9,2,9,7,4,6,4,
+      3,0,3,9,8,9,2,3,7,6,3,6,0,2,1,
+      8,7,6,2,3,7,6,9,8,3,5,2,1,5,8,
+      1,6,1,0,4,0,1,2,1,9,7,9,8,1,5,
+      0,3,4,7,9,5,8,0,5,4,0,4,7,9,2,
+      5,8,5,6,1,2,3,7,3,1,2,1,6,4,6,
+      2,4,9,4,5,6,0,4,6,0,8,5,3,0,7
+    ]
+  },
+  {
+    page: "08",
+    name: "Encuentra los símbolos objetivo",
+    type: "shapes",
+    targetLabel: "rectángulo y rombo",
+    data: [
+      "rectangle","circle","square","rectangle","triangle","cross","square","circle","rectangle","diamond","cross","pentagon",
+      "square","star","diamond","cross","star","pentagon","triangle","cross","club","star","circle","cross",
+      "circle","rectangle","square","club","star","diamond","rectangle","triangle","cross","circle","club","square",
+      "triangle","pentagon","star","rectangle","circle","cross","star","diamond","cross","star","cross","triangle",
+      "circle","square","rectangle","club","cross","diamond","star","triangle","cross","club","pentagon","cross",
+      "diamond","star","circle","pentagon","square","diamond","club","cross","star","triangle","square","pentagon",
+      "club","rectangle","star","diamond","pentagon","rectangle","cross","club","diamond","star","triangle","circle"
+    ],
+    targets: ["rectangle","diamond"]
+  },
+  {
+    page: "05",
+    name: "Encuentra todos los plátanos",
+    type: "bananas",
+    targetLabel: "plátano",
+    targetCount: 4,
+    data: [
+      "pear","shoe","butterfly","pear",
+      "butterfly","pear","key","banana",
+      "key","banana","shoe","key",
+      "banana","key","butterfly","shoe",
+      "butterfly","shoe","pear","banana"
+    ]
+  }
+];
+
+let participant = {};
+let currentActivity = 0;
+let activityStart = null;
+let selections = new Set();
+let results = [];
+let submitted = false;
+
+function $(id){ return document.getElementById(id); }
+
+function showStatus(message, type="info"){
+  const el = $("status");
+  el.textContent = message;
+  el.className = "status " + type;
+  el.style.display = "block";
+  setTimeout(()=>el.style.display="none", 3500);
+}
+
+function startSession(){
+  const id = $("participantId").value.trim();
+  if(!id){
+    showStatus("Es necesario ingresar el código del participante.", "error");
+    return;
+  }
+  participant = {
+    id,
+    name: $("participantName").value.trim(),
+    age: $("age").value ? Number($("age").value) : "",
+    session: Number($("session").value)
+  };
+  currentActivity = 0;
+  results = [];
+  submitted = false;
+  $("screenData").classList.add("hidden");
+  $("screenResult").classList.add("hidden");
+  $("screenActivity").classList.remove("hidden");
+  renderActivity();
+}
+
+function updateSteps(){
+  for(let i=0;i<5;i++){
+    const s=$("step"+i);
+    s.classList.remove("active","done");
+    if(i < currentActivity+1) s.classList.add("done");
+    if(i === currentActivity+1) s.classList.add("active");
+  }
+  if(currentActivity >= activities.length){
+    for(let i=0;i<4;i++) $("step"+i).classList.add("done");
+    $("step4").classList.add("active");
+  }
+}
+
+function renderActivity(){
+  selections = new Set();
+  const a = activities[currentActivity];
+  const content = $("activityContent");
+  let html = `
+    <h2>Página ${a.page}: ${a.name}</h2>
+    <div class="instruction"><strong>Instrucción:</strong> selecciona únicamente ${a.targetLabel}. Al terminar pulsa “Terminar actividad”.</div>
+    <div class="timer" id="timer">00:00</div>
+    <div class="counter" id="counter">Seleccionados: 0</div>
+  `;
+
+  if(a.type === "numbers"){
+    html += `<div class="number-grid">`;
+    a.data.forEach((value,i)=>{
+      html += `<button type="button" data-index="${i}" data-value="${value}" onclick="selectItem(this)">${value}</button>`;
+    });
+    html += `</div>`;
+  }
+
+  if(a.type === "shapes"){
+    html += `<div class="shape-grid">`;
+    a.data.forEach((value,i)=>{
+      html += `<button type="button" class="shape-btn" data-index="${i}" data-value="${value}" onclick="selectItem(this)">${shapeHTML(value)}</button>`;
+    });
+    html += `</div>`;
+  }
+
+  if(a.type === "bananas"){
+    html += `<div class="banana-grid">`;
+    const icons = {banana:"🍌",pear:"🍐",shoe:"👞",butterfly:"🦋",key:"🔑"};
+    a.data.forEach((value,i)=>{
+      html += `<button type="button" class="object-btn" data-index="${i}" data-value="${value}" onclick="selectItem(this)">${icons[value]}</button>`;
+    });
+    html += `</div>`;
+  }
+
+  content.innerHTML = html;
+  $("finishActivityBtn").textContent = currentActivity === activities.length-1 ? "Terminar y ver resultados" : "Terminar actividad";
+  activityStart = performance.now();
+  updateSteps();
+  startTimer();
+}
+
+function shapeHTML(value){
+  if(value==="rectangle") return `<span class="shape rectangle"></span>`;
+  if(value==="diamond") return `<span class="shape diamond"></span>`;
+  if(value==="square") return `<span class="shape square"></span>`;
+  if(value==="circle") return `<span class="shape circle"></span>`;
+  if(value==="triangle") return `<span class="shape triangle"></span>`;
+  if(value==="cross") return `<span class="shape cross"></span>`;
+  if(value==="star") return `<span class="star">★</span>`;
+  if(value==="club") return `<span class="club">♣</span>`;
+  if(value==="pentagon") return `<span class="star">⬟</span>`;
+  return "";
+}
+
+let timerInterval = null;
+function startTimer(){
+  clearInterval(timerInterval);
+  timerInterval = setInterval(()=>{
+    if(!activityStart) return;
+    const sec = Math.floor((performance.now()-activityStart)/1000);
+    $("timer").textContent = formatTime(sec);
+  },250);
+}
+function formatTime(sec){
+  const m=String(Math.floor(sec/60)).padStart(2,"0");
+  const s=String(sec%60).padStart(2,"0");
+  return `${m}:${s}`;
+}
+
+function selectItem(btn){
+  const index = Number(btn.dataset.index);
+  if(selections.has(index)){
+    selections.delete(index);
+    btn.classList.remove("selected");
+  }else{
+    selections.add(index);
+    btn.classList.add("selected");
+  }
+  $("counter").textContent = `Seleccionados: ${selections.size}`;
+}
+
+function resetCurrentActivity(){
+  renderActivity();
+}
+
+function finishActivity(){
+  clearInterval(timerInterval);
+  const a = activities[currentActivity];
+  const elapsed = Math.max(1, Math.round((performance.now()-activityStart)/1000));
+  let correct=0, incorrect=0;
+
+  selections.forEach(index=>{
+    const value = a.data[index];
+    const isCorrect = a.type==="shapes"
+      ? a.targets.includes(value)
+      : value === (a.type==="numbers" ? 7 : "banana");
+    if(isCorrect) correct++;
+    else incorrect++;
+  });
+
+  const totalTargets = a.type==="shapes"
+    ? a.data.filter(v=>a.targets.includes(v)).length
+    : a.targetCount;
+
+  const missed = Math.max(0,totalTargets-correct);
+  const accuracy = totalTargets + incorrect > 0
+    ? Number((correct/(totalTargets+incorrect)*100).toFixed(2))
+    : 0;
+
+  results.push({
+    page:a.page,
+    activity:a.name,
+    target:a.targetLabel,
+    total_targets:totalTargets,
+    selected_correct:correct,
+    selected_incorrect:incorrect,
+    missed,
+    accuracy_percent:accuracy,
+    time_seconds:elapsed,
+    time_formatted:formatTime(elapsed)
+  });
+
+  currentActivity++;
+  if(currentActivity < activities.length){
+    renderActivity();
+  }else{
+    showFinalResult();
+  }
+}
+
+function showFinalResult(){
+  clearInterval(timerInterval);
+  $("screenActivity").classList.add("hidden");
+  $("screenResult").classList.remove("hidden");
+  updateSteps();
+
+  const totalCorrect=results.reduce((s,r)=>s+r.selected_correct,0);
+  const totalWrong=results.reduce((s,r)=>s+r.selected_incorrect,0);
+  const totalTargets=results.reduce((s,r)=>s+r.total_targets,0);
+  const totalTime=results.reduce((s,r)=>s+r.time_seconds,0);
+  const overall=totalTargets+totalWrong
+    ? (totalCorrect/(totalTargets+totalWrong)*100).toFixed(2)
+    : "0.00";
+
+  $("resultContent").innerHTML = `
+    <div class="result-box">
+      <div class="result-score">${overall}%</div>
+      <p><strong>Resultado general de la sesión</strong></p>
+      <p>Aciertos: ${totalCorrect} · Errores: ${totalWrong} · Tiempo total: ${formatTime(totalTime)}</p>
+    </div>
+    <div style="margin-top:18px">
+      ${results.map(r=>`
+        <div class="card" style="box-shadow:none;border:1px solid var(--border);margin-bottom:10px">
+          <strong>Página ${r.page} · ${r.activity}</strong><br>
+          Aciertos: ${r.selected_correct} · Errores: ${r.selected_incorrect} ·
+          Omisiones: ${r.missed} · Precisión: ${r.accuracy_percent}% · Tiempo: ${r.time_formatted}
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function submitResults(){
+  if(submitted){
+    showStatus("Los resultados ya fueron enviados.", "info");
+    return;
+  }
+  if(SCRIPT_URL.includes("PEGA_AQUI")){
+    showStatus("Primero debes pegar en el HTML la URL de tu Web App de Google Apps Script.", "error");
+    return;
+  }
+
+  const payload = {
+    action:"saveSession",
+    participant:participant,
+    results:results,
+    total_correct:results.reduce((s,r)=>s+r.selected_correct,0),
+    total_incorrect:results.reduce((s,r)=>s+r.selected_incorrect,0),
+    total_time_seconds:results.reduce((s,r)=>s+r.time_seconds,0)
+  };
+
+  $("submitNote").textContent = "Enviando resultados...";
+
+  fetch(SCRIPT_URL,{
+    method:"POST",
+    mode:"no-cors",
+    headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
+    body:"data="+encodeURIComponent(JSON.stringify(payload))
+  })
+  .then(()=>{
+    submitted=true;
+    $("submitNote").textContent = "Resultados enviados. Puedes cerrar esta página.";
+    showStatus("Resultados enviados correctamente.", "success");
+  })
+  .catch(err=>{
+    console.error(err);
+    $("submitNote").textContent = "No se pudo confirmar el envío. Revisa la conexión y la URL del Apps Script.";
+    showStatus("No se pudo enviar. Revisa la configuración.", "error");
+  });
+}
+</script>
+</body>
+</html>
