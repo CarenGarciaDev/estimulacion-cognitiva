@@ -190,7 +190,7 @@
     <h2>Sesión finalizada</h2>
     <div id="resultContent"></div>
     <div class="actions">
-      <button class="primary" onclick="submitResults()">Enviar resultados</button>
+      <button id="submitBtn" class="primary" onclick="submitResults()">Enviar resultados</button>
     </div>
     <p id="submitNote" class="small"></p>
   </section>
@@ -483,6 +483,14 @@ function submitResults(){
     return;
   }
 
+  // Bloquea el botón ANTES de enviar para evitar doble clic y registros duplicados.
+  submitted = true;
+  const btn = $("submitBtn");
+  if(btn){
+    btn.disabled = true;
+    btn.textContent = "Enviando...";
+  }
+
   const payload = {
     action:"saveSession",
     participant:participant,
@@ -501,12 +509,17 @@ function submitResults(){
     body:"data="+encodeURIComponent(JSON.stringify(payload))
   })
   .then(()=>{
-    submitted=true;
     $("submitNote").textContent = "Resultados enviados. Puedes cerrar esta página.";
+    if(btn) btn.textContent = "Resultados enviados";
     showStatus("Resultados enviados correctamente.", "success");
   })
   .catch(err=>{
     console.error(err);
+    submitted = false;
+    if(btn){
+      btn.disabled = false;
+      btn.textContent = "Enviar resultados";
+    }
     $("submitNote").textContent = "No se pudo confirmar el envío. Revisa la conexión y la URL del Apps Script.";
     showStatus("No se pudo enviar. Revisa la configuración.", "error");
   });
