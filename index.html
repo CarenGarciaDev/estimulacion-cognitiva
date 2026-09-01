@@ -5,104 +5,331 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Estimulación Cognitiva para Adultos</title>
 <style>
-:root{--primary:#4f46e5;--primary-dark:#3730a3;--bg:#f5f7fb;--card:#fff;--text:#1f2937;--muted:#6b7280;--success:#15803d;--danger:#b91c1c;--border:#dbe2ea}
-*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-.app{max-width:1100px;margin:auto;padding:20px}.header,.card{background:var(--card);border-radius:18px;padding:22px;box-shadow:0 5px 20px rgba(0,0,0,.06);margin-bottom:18px}
-h1{margin:0 0 6px;font-size:28px}h2{margin-top:0}.subtitle{color:var(--muted)}
-.progress{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}.step{flex:1;min-width:110px;padding:10px;border-radius:10px;background:#e8ebf2;text-align:center;font-weight:700;font-size:13px}.step.active{background:var(--primary);color:white}.step.done{background:#dcfce7;color:var(--success)}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}label{font-weight:700;font-size:14px}input,select{width:100%;padding:12px;margin-top:7px;border:1px solid var(--border);border-radius:10px;font-size:16px;background:white}
-button{border:0;border-radius:11px;padding:12px 18px;font-size:16px;font-weight:700;cursor:pointer}.primary{background:var(--primary);color:#fff}.primary:hover{background:var(--primary-dark)}.secondary{background:#e8ebf2;color:var(--text)}button:disabled{opacity:.65;cursor:not-allowed}
-.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;flex-wrap:wrap}.instruction{background:#eef2ff;border-left:5px solid var(--primary);padding:14px;border-radius:10px;margin:14px 0 20px}.timer{text-align:center;font-size:28px;font-weight:800;margin:8px 0 18px}.counter{text-align:center;color:var(--muted);margin-bottom:14px}
-.item-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:8px;max-width:950px;margin:auto}.item-btn{min-height:56px;background:#fff;border:2px solid #e5e7eb;font-size:24px;color:#111827;border-radius:10px;padding:8px}.item-btn:hover{background:#eef2ff}.item-btn.selected{background:#dbeafe;border-color:var(--primary);color:var(--primary-dark)}
-.emoji-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:620px;margin:auto}.emoji-btn{min-height:100px;background:#fff;border:2px solid #e5e7eb;border-radius:14px;font-size:50px}.emoji-btn.selected{background:#dbeafe;border-color:var(--primary)}
-.letter-rows{max-width:850px;margin:auto;display:flex;flex-direction:column;gap:14px}.letter-row{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;border:1px solid var(--border);border-radius:12px;padding:10px}.letter-btn{background:#fff;border:2px solid transparent;font-size:30px;min-height:58px}.letter-btn.selected{background:#dbeafe;border-color:var(--primary)}
-.result-box{text-align:center;background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:20px}.result-score{font-size:42px;font-weight:800;color:var(--primary)}.hidden{display:none}.small{font-size:13px;color:var(--muted)}.status{display:none;position:fixed;right:20px;bottom:20px;color:white;padding:14px 18px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.2);z-index:20}.status.success{background:#15803d}.status.error{background:#b91c1c}.status.info{background:#334155}
-@media(max-width:800px){.grid{grid-template-columns:1fr}.item-grid{grid-template-columns:repeat(8,1fr)}}
-@media(max-width:520px){.app{padding:10px}.card{padding:16px}.item-grid{grid-template-columns:repeat(5,1fr)}.emoji-grid{grid-template-columns:repeat(2,1fr)}.letter-row{grid-template-columns:repeat(4,1fr)}.progress{display:none}}
+:root{--p:#5b8f7b;--pd:#3f6b5c;--bg:#f5faf8;--card:#fff;--text:#1f2937;--muted:#64748b;--ok:#15803d;--bad:#b91c1c;--border:#dbe7e2;--accent:#e8f3ef}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);font-size:18px}
+header{background:linear-gradient(135deg,var(--pd),var(--p));color:white;padding:26px 18px;text-align:center}
+header h1{margin:0 0 8px;font-size:clamp(26px,4vw,42px)}
+header p{margin:0;opacity:.95}
+main{max-width:1050px;margin:24px auto;padding:0 16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;margin:18px 0;box-shadow:0 6px 24px rgba(31,41,55,.06)}
+.hidden{display:none!important}
+.grid{display:grid;gap:14px}
+.grid2{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.grid3{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+label{font-weight:700;display:block;margin:8px 0}
+input,select{width:100%;padding:13px;border:2px solid var(--border);border-radius:12px;font-size:18px;background:white}
+button{border:0;border-radius:12px;padding:13px 18px;font-size:18px;font-weight:700;cursor:pointer;background:var(--p);color:white}
+button:hover{filter:brightness(.96)}
+button.secondary{background:#64748b}
+button.option{background:white;color:var(--text);border:2px solid var(--border);min-height:54px}
+button.option.selected{border-color:var(--p);background:var(--accent)}
+button.option.correct{border-color:var(--ok);background:#ecfdf3}
+button.option.wrong{border-color:var(--bad);background:#fff1f2}
+.session-buttons{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+.session-buttons button{padding:16px 8px}
+.badge{display:inline-block;background:var(--accent);color:var(--pd);padding:6px 10px;border-radius:999px;font-weight:700}
+.activity-title{font-size:26px;margin:0 0 8px}
+.instruction{font-size:20px;line-height:1.45;margin-bottom:18px}
+.progress{height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:12px 0 22px}
+.progress>div{height:100%;background:var(--p);width:0}
+.rows{display:grid;gap:16px}
+.rowbox{border:2px solid var(--border);border-radius:14px;padding:14px}
+.option-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.big{font-size:32px}
+.symbol-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:10px}
+.symbol{padding:14px;border:2px solid var(--border);border-radius:12px;text-align:center;font-size:28px;background:white;cursor:pointer}
+.symbol.selected{background:var(--accent);border-color:var(--p)}
+.sequence-item{display:grid;grid-template-columns:90px 1fr;gap:12px;align-items:center;margin:10px 0}
+.sequence-item select{width:90px}
+.sentence{display:grid;gap:8px;margin:14px 0}
+.wordbank{display:flex;flex-wrap:wrap;gap:8px}
+.word{background:#f8fafc;border:2px solid var(--border);border-radius:10px;padding:8px 12px;cursor:pointer}
+.answerline{min-height:50px;border:2px dashed #cbd5e1;border-radius:10px;padding:10px;background:#fff}
+.definition{padding:14px;border:1px solid var(--border);border-radius:12px;margin:10px 0}
+.size-row{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:center;padding:14px;border:1px solid var(--border);border-radius:12px;margin:10px 0}
+.targetbox{text-align:center;border:3px solid #e11d48;border-radius:10px;padding:8px}
+.choices{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.size-choice{min-width:95px;min-height:95px;display:flex;justify-content:center;align-items:center;background:white;border:2px solid var(--border);border-radius:10px;cursor:pointer}
+.shadow{font-size:54px;filter:grayscale(1) brightness(0)}
+.summary{font-size:20px;line-height:1.6}
+.kpi{background:#f8fafc;border-radius:12px;padding:14px;text-align:center}
+.kpi strong{display:block;font-size:28px}
+footer{text-align:center;color:var(--muted);padding:28px}
+@media(max-width:600px){body{font-size:17px}.size-row{grid-template-columns:1fr}.targetbox{max-width:160px}.activity-title{font-size:23px}}
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="header">
-    <h1>Estimulación Cognitiva para Adultos</h1>
-    <div id="subtitle" class="subtitle">Selecciona la sesión que deseas realizar</div>
-    <div id="progress" class="progress"></div>
+<header>
+  <h1>Estimulación Cognitiva para Adultos</h1>
+  <p>Actividades interactivas por sesión</p>
+</header>
+<main>
+<section id="welcome" class="card">
+  <h2>Datos del participante</h2>
+  <div class="grid grid2">
+    <div><label for="pid">Código del participante</label><input id="pid" placeholder="Ej. P001"></div>
+    <div><label for="pname">Nombre o alias</label><input id="pname" placeholder="Nombre"></div>
+    <div><label for="age">Edad</label><input id="age" type="number" min="18" max="120"></div>
   </div>
+  <h2>Selecciona la sesión</h2>
+  <div class="session-buttons" id="sessionButtons"></div>
+  <p style="color:var(--muted)">Los resultados de cada sesión se guardan en una hoja independiente del mismo Google Sheet.</p>
+</section>
 
-  <section id="screenData" class="card">
-    <h2>Datos del participante</h2>
-    <p class="subtitle">Los resultados se guardan automáticamente en la hoja correspondiente de Google Sheets.</p>
-    <div class="grid">
-      <div><label for="participantId">Código del participante *</label><input id="participantId" placeholder="Ej. P001" maxlength="30"></div>
-      <div><label for="participantName">Nombre o alias</label><input id="participantName" placeholder="Ej. María" maxlength="80"></div>
-      <div><label for="age">Edad</label><input id="age" type="number" min="1" max="120" placeholder="Ej. 68"></div>
-      <div><label for="session">Sesión</label><select id="session" onchange="updateSessionPreview()"><option value="2">Sesión 2</option><option value="3" selected>Sesión 3</option></select></div>
+<section id="runner" class="hidden">
+  <div class="card">
+    <span class="badge" id="sessionBadge"></span>
+    <div class="progress"><div id="progressBar"></div></div>
+    <div id="activityHost"></div>
+    <div style="display:flex;gap:10px;justify-content:space-between;margin-top:20px">
+      <button class="secondary" id="exitBtn">Salir</button>
+      <button id="nextBtn">Continuar</button>
     </div>
-    <div id="sessionDescription" class="instruction"></div>
-    <div class="actions"><button class="primary" onclick="startSession()">Comenzar sesión</button></div>
-  </section>
+  </div>
+</section>
 
-  <section id="screenActivity" class="card hidden">
-    <div id="activityContent"></div>
-    <div class="actions"><button class="secondary" onclick="resetCurrentActivity()">Reiniciar actividad</button><button id="finishActivityBtn" class="primary" onclick="finishActivity()">Terminar actividad</button></div>
-  </section>
+<section id="finish" class="card hidden">
+  <h2>Sesión completada</h2>
+  <div id="summary" class="summary"></div>
+  <button id="sendBtn">Enviar resultados</button>
+  <button class="secondary" id="homeBtn">Volver al inicio</button>
+  <p id="sendStatus"></p>
+</section>
+</main>
+<footer>Herramienta educativa de estimulación cognitiva</footer>
 
-  <section id="screenResult" class="card hidden">
-    <h2>Sesión finalizada</h2><div id="resultContent"></div>
-    <div class="actions"><button id="submitBtn" class="primary" onclick="submitResults()">Enviar resultados</button></div>
-    <p id="submitNote" class="small"></p>
-  </section>
-</div>
-<div id="status" class="status"></div>
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6YgXdxHYeqqFJkwI9XLfXlhgpc0hhFtQZVlR6RuWh9G09o0JOE2qUOL3DdVY95ZNL9g/exec";
 
-const session2Activities = [
- {page:"07",name:"Encuentra todos los números 7",type:"mixed",instruction:"Selecciona únicamente todos los números 7.",data:[6,1,7,5,0,4,9,8,0,7,6,8,9,8,0,4,9,0,3,2,1,7,5,2,8,4,3,5,7,3,7,5,2,8,6,8,5,1,4,5,1,0,2,3,9,9,2,8,1,7,3,4,6,9,2,9,7,4,6,4,3,0,3,9,8,9,2,3,7,6,3,6,0,2,1,8,7,6,2,3,7,6,9,8,3,5,2,1,5,8,1,6,1,0,4,0,1,2,1,9,7,9,8,1,5,0,3,4,7,9,5,8,0,5,4,0,4,7,9,2,5,8,5,6,1,2,3,7,3,1,2,1,6,4,6,2,4,9,4,5,6,0,4,6,0,8,5,3,0,7],isCorrect:v=>v===7},
- {page:"08",name:"Encuentra los símbolos objetivo",type:"mixed",instruction:"Selecciona los rectángulos y rombos.",data:["▭","○","□","▭","△","✚","□","○","▭","◇","✚","⬟","□","★","◇","✚","★","⬟","△","✚","♣","★","○","✚","○","▭","□","♣","★","◇","▭","△","✚","○","♣","□","△","⬟","★","▭","○","✚","★","◇","✚","★","✚","△","○","□","▭","♣","✚","◇","★","△","✚","♣","⬟","✚"],isCorrect:v=>v==="▭"||v==="◇"},
- {page:"05",name:"Encuentra todos los plátanos",type:"emoji",instruction:"Selecciona únicamente todos los plátanos.",data:["🍐","👞","🦋","🍐","🦋","🍐","🔑","🍌","🔑","🍌","👞","🔑","🍌","🔑","🦋","👞","🦋","👞","🍐","🍌"],isCorrect:v=>v==="🍌"}
-];
+const sessions = {
+2:[
+ {page:"07",type:"repeatRows",title:"Imágenes repetidas por fila",
+  rows:[["🍓","🍌","💄","🍓","🕒"],["👜","🪮","🦋","✋","🪮"],["👕","👜","💄","🪮","💄"],["✋","🕒","🚲","🕒","👞"],["🚲","🦋","💄","🦋","🍓"]],
+  answers:[[0,3],[1,4],[2,4],[1,3],[1,3]]},
+ {page:"08",type:"repeatCols",title:"Imágenes repetidas por columna",
+  cols:[["🥬","🥐","🍲","🍅","🥬","🍞"],["🍫","🍲","🍷","🧁","🫖","🍷"],["🍲","🫖","🍷","🫖","🔑","🍅"],["🥐","🧁","🥬","🧁","🍲","🍞"],["🍅","🍞","🥐","🥬","✋","🍅"]],
+  answers:[[0,4],[2,5],[1,3],[1,3],[0,5]]},
+ {page:"05",type:"selectTargets",title:"Símbolos iguales",instruction:"Selecciona todos los símbolos que coincidan con los modelos ✦ y ◆.",
+  items:["◆","●","✦","■","✚","◆","▲","✦","⬟","●","◆","✚","✦","■","◆","▲"],targets:["◆","✦"]}
+],
+3:[
+ {page:"09",type:"duplicates",title:"Imágenes que se repiten",instruction:"Selecciona todas las imágenes que aparecen más de una vez.",
+  items:["🧁","🥬","🛑","🍊","🥐","🫖","⚽","🍐","🕒","🍅","🍲","☕","🔩","🍊","🍞","🍓"],targets:["🍊"]},
+ {page:"10",type:"repeatLetters",title:"Letras repetidas por fila",
+  rows:[["f","g","u","n","m","h","u","v"],["r","t","x","s","r","j","k","ñ"],["q","g","b","d","p","t","ñ","p"],["x","z","s","r","h","u","x","n"],["s","e","a","u","d","o","i"],["z","s","d","c","o","p","h","c"]],
+  answers:[["u"],["r"],["p"],["x"],[],["c"]]},
+ {page:"06",type:"numbersOnly",title:"Solo números",instruction:"Selecciona únicamente los números.",
+  items:["b","j","6","r","z","7","q","5","8","i","0","w","k","s","9","d","1","ñ","3","p","2","h","4","y","6","a","2","c","9","z","1","8","5","u","4","3","7","o","0","t","9"]}
+],
+4:[
+ {page:"11",type:"duplicates",title:"Imágenes o símbolos que se repiten",instruction:"Selecciona los elementos que aparecen repetidos.",
+  items:["🪞","✱","⚽","♣","✚","🍅","★","🛍️","🪣","🕒","■","🍊","🪞","◆","●","🧁","▲","🔩","🛑"],targets:["🪞"]},
+ {page:"13",type:"sequence",title:"Lavarse el pelo",instruction:"Asigna 1, 2 y 3 para ordenar correctamente los pasos.",
+  items:["Aclarar y secar el pelo","Echarse champú y frotar","Mojar el pelo"],correct:[3,2,1]},
+ {page:"15",type:"sequence",title:"Montar en taxi",instruction:"Ordena del 1 al 5.",
+  items:["Subir al taxi","Dar el alto a un taxi","Pagar el viaje","Bajar del taxi","Decir el destino al taxista"],correct:[2,1,4,5,3]}
+],
+5:[
+ {page:"14",type:"sequence",title:"Comprar el pan",instruction:"Ordena del 1 al 4.",
+  items:["Pagar el pan","Salir de la panadería","Pedir el pan","Entrar en la panadería"],correct:[3,4,2,1]},
+ {page:"16",type:"sequence",title:"Viajar en tren",instruction:"Ordena del 1 al 6.",
+  items:["Esperar al tren en el andén","Subir al tren","Comprar los billetes","Salir de la estación de trenes","Bajar del tren","Buscar el asiento"],correct:[2,3,1,6,5,4]},
+ {page:"18",type:"singleChoice",title:"El objeto que sobra",instruction:"Selecciona el objeto que no pertenece al grupo.",
+  options:["Lápiz","Bolígrafo","Jaula"],correct:"Jaula"}
+],
+6:[
+ {page:"17",type:"sequence",title:"Cenar en un restaurante",instruction:"Ordena del 1 al 8.",
+  items:["Llamar a un restaurante","Reservar una mesa","Ir al restaurante","Aguardar en la entrada del restaurante","Pedir los platos al camarero","Leer el menú","Arreglarse para la ocasión","Decidir los platos"],
+  correct:[1,2,4,5,7,6,3,8]},
+ {page:"19",type:"singleChoice",title:"El objeto que sobra",instruction:"Selecciona el que no pertenece al grupo.",
+  options:["Nevera","Lavadora","Dentífrico","Televisor"],correct:"Dentífrico"},
+ {page:"20",type:"oddGroups",title:"La palabra que sobra",
+  groups:[{words:["Rugoso","Áspero","Tenaz","Liso","Suave"],correct:"Tenaz"},{words:["Enredo","Lío","Confusión","Carácter","Embrollo"],correct:"Carácter"}]}
+],
+7:[
+ {page:"21",type:"oddGroups",title:"La palabra que sobra",
+  groups:[{words:["Bronce","Aluminio","Hierro","Cobre","Madera"],correct:"Madera"},{words:["Ramificación","Acontecimiento","Evento","Suceso","Fenómeno"],correct:"Ramificación"}]},
+ {page:"24",type:"sentences",title:"Ordena las palabras",
+  sets:[
+   {words:["un","roto","he","vaso"],correct:"he roto un vaso"},
+   {words:["un","beso","darte","quiero"],correct:"quiero darte un beso"},
+   {words:["yo","cocino","sal","sin"],correct:"yo cocino sin sal"},
+   {words:["nudo","desataré","te","el"],correct:"te desataré el nudo"}
+  ]}
+],
+8:[
+ {page:"25",type:"sentences",title:"Ordena las palabras",
+  sets:[
+   {words:["sombrero","paja","ponte","el","de"],correct:"ponte el sombrero de paja"},
+   {words:["tienes","los","color","ojos","miel"],correct:"tienes los ojos color miel"},
+   {words:["he","todo","gastado","maquillaje","el"],correct:"he gastado todo el maquillaje"},
+   {words:["sin","barrer","casa","la","dejamos"],correct:"dejamos la casa sin barrer"}
+  ]},
+ {page:"29",type:"definitions",title:"Elige la palabra adecuada",
+  questions:[
+   ["Objeto de metal con el que abrimos y cerramos puertas.","Llaves",["Llaves","Libro"]],
+   ["Órgano del cuerpo que mueve la sangre.","Corazón",["Corazón","León"]],
+   ["Objeto que usamos para peinarnos.","Peine",["Leña","Peine"]],
+   ["Objeto que nos protege de la lluvia.","Paraguas",["Paraguas","Toro"]],
+   ["Cubren los pies y sirven para caminar.","Zapatos",["Globo","Zapatos"]],
+   ["Parte del cuerpo que permite oír.","Oreja",["Oreja","Chicle"]],
+   ["Objeto con cristal y patillas para ver mejor.","Gafas",["Zumo","Gafas"]],
+   ["Líquido que nos ponemos para oler mejor.","Colonia",["Tila","Colonia"]],
+   ["Parte del cuerpo con la que olemos y respiramos.","Nariz",["Nariz","Lomo"]],
+   ["Fruta verde por fuera, blanca por dentro y con mucha agua.","Pera",["Pera","Pluma"]]
+  ]}
+],
+9:[
+ {page:"26",type:"sentences",title:"Ordena las palabras",
+  sets:[
+   {words:["me","larga","apetece","una","dormir","siesta"],correct:"me apetece dormir una larga siesta"},
+   {words:["el","está","nubes","de","repleto","cielo"],correct:"el cielo está repleto de nubes"},
+   {words:["en","tomamos","fresca","leche","pueblo","el"],correct:"en el pueblo tomamos leche fresca"},
+   {words:["muchos","televisores","estropeado","la","tormenta","ha"],correct:"la tormenta ha estropeado muchos televisores"}
+  ]},
+ {page:"30",type:"definitions",title:"Elige la palabra adecuada",
+  questions:[
+   ["Lugar al que van los niños para aprender.","Colegio",["Cordón","Colegio","Castor"]],
+   ["Objeto de tela relleno y blando que se pone en sofá o cama.","Cojín",["Pastilla","Freno","Cojín"]],
+   ["Objeto que sirve para echar la sal.","Salero",["Espalda","Salero","Niña"]],
+   ["Trozo de tela que se usa para secarse.","Toalla",["Toalla","Dátil","Carmín"]],
+   ["Andar por la calle tranquilamente para distraerse.","Pasear",["Charlar","Pasear","Limar"]],
+   ["Objeto de cocina de metal con mango para freír.","Sartén",["Puente","Jaula","Sartén"]],
+   ["Tela grande que se pone en el suelo para decorar y proteger del frío.","Alfombra",["Periódico","Taza","Alfombra"]],
+   ["Salir del vientre de la madre y empezar a vivir.","Nacer",["Astillar","Nacer","Creer"]],
+   ["Recipiente pequeño con asa para tomar café.","Taza",["Trasto","Pila","Taza"]],
+   ["Ensuciar algo.","Manchar",["Oler","Manchar","Subir"]]
+  ]}
+],
+10:[
+ {page:"32",type:"definitions",title:"Elige la palabra adecuada",
+  questions:[
+   ["Herramienta de metal que se usa para apalancar y abrir.","Palanca",["Pinza","Palanca","Palo","Plomo"]],
+   ["Parte inferior y alargada de la mandíbula.","Mentón",["Lengua","Pecho","Nuca","Mentón"]],
+   ["Hijo de mi tío.","Primo",["Nieto","Yerno","Primo","Hermano"]],
+   ["Medio de transporte con trenes que van bajo tierra.","Metro",["Submarino","Puerto","Metro","Carro"]],
+   ["Cicatriz redonda y pequeña en el vientre.","Ombligo",["Ombligo","Herida","Tripa","Uña"]],
+   ["Persona que vende y representa productos.","Comercial",["Camarera","Director","Comercial","Cómico"]],
+   ["Pescado de carne rosada y anaranjada que remonta ríos.","Salmón",["Sapo","Salmón","Sardina","Siluro"]],
+   ["Piel que cubre y protege el ojo y puede subir y bajar.","Párpado",["Paraguas","Párpado","Cortina","Ceja"]],
+   ["Piel de animales tratada para hacer ropa o bolsos.","Cuero",["Corcho","Lana","Cuero","Algodón"]],
+   ["Sentimiento de terror hacia algo peligroso.","Miedo",["Miedo","Amor","Dolor","Asco"]]
+  ]},
+ {page:"46",type:"sizeMatch",title:"Mismo tamaño",rows:[
+  ["🍎",[38,54],1],["👕",[54,38],0],["💼",[58,42],1],["🍁",[54,38],0]
+ ]}
+],
+11:[
+ {page:"47",type:"sizeMatch",title:"Mismo tamaño",rows:[
+  ["🎛️",[56,38,50],2],["🧽",[38,56,68],0],["🍫",[52,62,42],1],["🚜",[66,54,40],1]
+ ]},
+ {page:"48",type:"sizeMatch",title:"Mismo tamaño",rows:[
+  ["📰",[62,36,54,28],2],["🥫",[50,38,62,30],2],["🛒",[42,56,28,64],1],["🧻",[58,42,66,48],0]
+ ]},
+ {page:"51",type:"shadowMatch",title:"Encuentra la sombra correcta",rows:[
+  ["👖",["👖","🦯"],0],["💨",["🧴","💨"],1],["🐥",["🐥","🐈"],0],["✏️",["🪶","✏️"],1]
+ ]}
+],
+12:[
+ {page:"49",type:"sizeMatch",title:"Mismo tamaño",rows:[
+  ["🎒",[64,42,52,58],0],["🥕",[62,40,56,34],0],["👗",[42,58,50,48],1],["🪑",[52,64,44,58],1]
+ ]},
+ {page:"52",type:"shadowMatch",title:"Encuentra la sombra correcta",rows:[
+  ["🧹",["📄","🎒","🧹"],2],["🍞",["📦","🍞","🧹"],1],["🚪",["🚪","🛋️","🐈"],0],["🦶",["🥤","🦶","🧹"],1]
+ ]},
+ {page:"63",type:"count",title:"¿Cuántos helados hay?",emoji:"🍦",count:17}
+]};
 
-const page06Data = ["b","j",6,"r","z","j","e",7,"q",5,8,"i","k",0,"w",7,"k","s",9,"d",0,"l",8,"ñ",9,"o",1,"s",7,5,"c",7,8,0,"y",0,5,9,"x",3,4,"p",2,"h",6,3,"q","v",1,4,9,"e",3,"f","x",1,4,"p",6,"y",6,"a",2,6,1,"c",9,0,"z",1,"i","n",2,8,"g",7,"j","p",4,2,"f",8,6,0,"m",2,5,3,5,"w",5,"u",4,2,3,"k","r",8,"a",0,"b",2,8,"g","t",8,5,7,"o",8,"b",6,7,4,5,6,3,"s","h",9,"v","r","h","f",8,"q",7,"o","l",3,"l",1,"g",9,4,7,"d",3,4,0,"v",9,1,9,"t",5,"u",2,"n",3,1,3,4,"m","y",6,"a",0,"t","i","z",0,"m","n",5,6,"u",4,"ñ","e",2,7,"ñ",0,"x"];
-const page10Rows = [
- ["f","g","u","n","m","h","u","v"],
- ["r","t","x","s","r","j","k","ñ"],
- ["q","g","b","d","p","t","ñ","p"],
- ["x","z","s","r","h","u","x","n"],
- ["s","a","i","e","a","u","d","o"],
- ["z","s","d","c","o","p","h","c"]
-];
-function duplicateTargets(rows){const set=new Set();rows.forEach((row,ri)=>{const counts={};row.forEach(v=>counts[v]=(counts[v]||0)+1);row.forEach((v,ci)=>{if(counts[v]>1)set.add(`${ri}-${ci}`)})});return set}
-const session3Activities = [
- {page:"09",name:"Encuentra las imágenes que se repiten",type:"emoji",instruction:"Selecciona todas las imágenes que aparecen repetidas dentro de la tabla.",data:["🧁","🥬","🛑","🍊","🥐","🫖","⚽","🍐","🕒","🍅","🍲","☕","🔩","🍊","🍞","🍓"],isCorrect:v=>v==="🍊"},
- {page:"10",name:"Encuentra las letras que se repiten",type:"letterRows",instruction:"En cada fila, selecciona las dos letras que se repiten.",rows:page10Rows,targetKeys:duplicateTargets(page10Rows)},
- {page:"06",name:"Encuentra solamente los números",type:"mixed",instruction:"Selecciona únicamente los números; no selecciones letras.",data:page06Data,isCorrect:v=>/^\d$/.test(String(v))}
-];
+let currentSession=null, activityIndex=0, activityResults=[], startedAt=0, state={};
 
-let activities=[],participant={},currentActivity=0,activityStart=null,selections=new Set(),results=[],submitted=false,timerInterval=null;
-const $=id=>document.getElementById(id);
-function showStatus(message,type="info"){const el=$("status");el.textContent=message;el.className="status "+type;el.style.display="block";setTimeout(()=>el.style.display="none",3500)}
-function getActivities(session){return Number(session)===3?session3Activities:session2Activities}
-function updateSessionPreview(){const s=Number($("session").value);const acts=getActivities(s);$("subtitle").textContent=`Sesión ${s} · Actividades de atención visual`;$("sessionDescription").innerHTML=`<strong>Sesión ${s}:</strong> páginas ${acts.map(a=>a.page).join(", ")}. El sistema medirá aciertos, errores, omisiones y tiempo.`;renderProgress(acts,-1)}
-function renderProgress(acts,active){const p=$("progress");p.innerHTML=`<div class="step ${active===-1?'active':''}">1. Datos</div>`+acts.map((a,i)=>`<div class="step ${active>i?'done':''} ${active===i?'active':''}">${i+2}. Página ${a.page}</div>`).join("")+`<div class="step ${active>=acts.length?'active':''}">${acts.length+2}. Resultado</div>`}
-function startSession(){const id=$("participantId").value.trim();if(!id){showStatus("Ingresa el código del participante.","error");return}participant={id,name:$("participantName").value.trim(),age:$("age").value?Number($("age").value):"",session:Number($("session").value)};activities=getActivities(participant.session);currentActivity=0;results=[];submitted=false;$("screenData").classList.add("hidden");$("screenResult").classList.add("hidden");$("screenActivity").classList.remove("hidden");renderActivity()}
-function renderActivity(){selections=new Set();const a=activities[currentActivity];let html=`<h2>Página ${a.page}: ${a.name}</h2><div class="instruction"><strong>Instrucción:</strong> ${a.instruction}</div><div class="timer" id="timer">00:00</div><div class="counter" id="counter">Seleccionados: 0</div>`;
- if(a.type==="mixed"){html+=`<div class="item-grid">`+a.data.map((v,i)=>`<button type="button" class="item-btn" data-key="${i}" onclick="selectItem(this)">${v}</button>`).join("")+`</div>`}
- if(a.type==="emoji"){html+=`<div class="emoji-grid">`+a.data.map((v,i)=>`<button type="button" class="emoji-btn" data-key="${i}" onclick="selectItem(this)">${v}</button>`).join("")+`</div>`}
- if(a.type==="letterRows"){html+=`<div class="letter-rows">`+a.rows.map((row,ri)=>`<div class="letter-row">${row.map((v,ci)=>`<button type="button" class="letter-btn" data-key="${ri}-${ci}" onclick="selectItem(this)">${v}</button>`).join("")}</div>`).join("")+`</div>`}
- $("activityContent").innerHTML=html;$("finishActivityBtn").textContent=currentActivity===activities.length-1?"Terminar y ver resultados":"Terminar actividad";activityStart=performance.now();renderProgress(activities,currentActivity);startTimer()}
-function startTimer(){clearInterval(timerInterval);timerInterval=setInterval(()=>{if(activityStart&&$("timer"))$("timer").textContent=formatTime(Math.floor((performance.now()-activityStart)/1000))},250)}
-function formatTime(sec){return `${String(Math.floor(sec/60)).padStart(2,"0")}:${String(sec%60).padStart(2,"0")}`}
-function selectItem(btn){const key=btn.dataset.key;if(selections.has(key)){selections.delete(key);btn.classList.remove("selected")}else{selections.add(key);btn.classList.add("selected")}$("counter").textContent=`Seleccionados: ${selections.size}`}
-function resetCurrentActivity(){renderActivity()}
-function finishActivity(){clearInterval(timerInterval);const a=activities[currentActivity],elapsed=Math.max(1,Math.round((performance.now()-activityStart)/1000));let correct=0,incorrect=0,totalTargets=0;
- if(a.type==="letterRows"){totalTargets=a.targetKeys.size;selections.forEach(k=>a.targetKeys.has(k)?correct++:incorrect++)}
- else{totalTargets=a.data.filter(v=>a.isCorrect(v)).length;selections.forEach(k=>a.isCorrect(a.data[Number(k)])?correct++:incorrect++)}
- const missed=Math.max(0,totalTargets-correct),accuracy=(totalTargets+incorrect)>0?Number((correct/(totalTargets+incorrect)*100).toFixed(2)):0;
- results.push({page:a.page,activity:a.name,total_targets:totalTargets,selected_correct:correct,selected_incorrect:incorrect,missed,accuracy_percent:accuracy,time_seconds:elapsed,time_formatted:formatTime(elapsed)});currentActivity++;if(currentActivity<activities.length)renderActivity();else showFinalResult()}
-function showFinalResult(){clearInterval(timerInterval);$("screenActivity").classList.add("hidden");$("screenResult").classList.remove("hidden");renderProgress(activities,activities.length);const tc=results.reduce((s,r)=>s+r.selected_correct,0),tw=results.reduce((s,r)=>s+r.selected_incorrect,0),tt=results.reduce((s,r)=>s+r.total_targets,0),tm=results.reduce((s,r)=>s+r.time_seconds,0),overall=tt+tw?(tc/(tt+tw)*100).toFixed(2):"0.00";$("resultContent").innerHTML=`<div class="result-box"><div class="result-score">${overall}%</div><p><strong>Resultado general de la sesión ${participant.session}</strong></p><p>Aciertos: ${tc} · Errores: ${tw} · Tiempo total: ${formatTime(tm)}</p></div><div style="margin-top:18px">${results.map(r=>`<div class="card" style="box-shadow:none;border:1px solid var(--border);margin-bottom:10px"><strong>Página ${r.page} · ${r.activity}</strong><br>Aciertos: ${r.selected_correct} · Errores: ${r.selected_incorrect} · Omisiones: ${r.missed} · Precisión: ${r.accuracy_percent}% · Tiempo: ${r.time_formatted}</div>`).join("")}</div>`}
-function submitResults(){if(submitted){showStatus("Los resultados ya fueron enviados.","info");return}submitted=true;const btn=$("submitBtn");btn.disabled=true;btn.textContent="Enviando...";const payload={action:"saveSession",participant,results};$("submitNote").textContent="Enviando resultados...";fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:"data="+encodeURIComponent(JSON.stringify(payload))}).then(()=>{$("submitNote").textContent=`Resultados enviados a la hoja de la sesión ${participant.session}.`;btn.textContent="Resultados enviados";showStatus("Resultados enviados correctamente.","success")}).catch(err=>{console.error(err);submitted=false;btn.disabled=false;btn.textContent="Enviar resultados";$("submitNote").textContent="No se pudieron enviar los resultados.";showStatus("Error al enviar.","error")})}
-updateSessionPreview();
+function fmt(sec){sec=Math.max(0,Math.round(sec));return String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0")}
+function norm(s){return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[¿?¡!.,;:]/g,"").replace(/\s+/g," ").trim()}
+function participant(){
+ return {participant_id:document.getElementById("pid").value.trim(),participant_name:document.getElementById("pname").value.trim(),age:document.getElementById("age").value.trim()}
+}
+function validateParticipant(){const p=participant();if(!p.participant_id||!p.participant_name||!p.age){alert("Completa código, nombre y edad.");return false}return true}
+
+const sb=document.getElementById("sessionButtons");
+Object.keys(sessions).forEach(s=>{const b=document.createElement("button");b.textContent="Sesión "+s;b.onclick=()=>startSession(Number(s));sb.appendChild(b)});
+
+function startSession(s){
+ if(!validateParticipant()) return;
+ currentSession=s; activityIndex=0; activityResults=[]; startedAt=Date.now();
+ document.getElementById("welcome").classList.add("hidden");document.getElementById("finish").classList.add("hidden");document.getElementById("runner").classList.remove("hidden");
+ document.getElementById("sessionBadge").textContent="Sesión "+s;
+ renderActivity();
+}
+function renderActivity(){
+ const a=sessions[currentSession][activityIndex]; state={};
+ document.getElementById("progressBar").style.width=((activityIndex)/sessions[currentSession].length*100)+"%";
+ const h=document.getElementById("activityHost");
+ h.innerHTML=`<h2 class="activity-title">Página ${a.page} · ${a.title}</h2><p class="instruction">${a.instruction||defaultInstruction(a)}</p><div id="activityBody"></div>`;
+ const body=document.getElementById("activityBody");
+ ({repeatRows,repeatCols,selectTargets,duplicates,repeatLetters,numbersOnly,sequence,singleChoice,oddGroups,sentences,definitions,sizeMatch,shadowMatch,count}[a.type])(a,body);
+ document.getElementById("nextBtn").textContent=activityIndex===sessions[currentSession].length-1?"Finalizar sesión":"Continuar";
+}
+function defaultInstruction(a){
+ const m={repeatRows:"Selecciona en cada fila las dos imágenes que se repiten.",repeatCols:"Selecciona en cada columna las dos imágenes que se repiten.",repeatLetters:"Selecciona la letra que se repite en cada fila.",sizeMatch:"Selecciona la opción que tenga el mismo tamaño que el modelo.",shadowMatch:"Selecciona la sombra que corresponde al objeto.",definitions:"Lee cada definición y elige la respuesta correcta.",sentences:"Pulsa las palabras en el orden correcto para formar cada frase.",count:"Cuenta los elementos y escribe el total."};
+ return m[a.type]||"Completa la actividad.";
+}
+function selectable(el,key,val){el.onclick=()=>{if(!state[key])state[key]=new Set(); if(state[key].has(val)){state[key].delete(val);el.classList.remove("selected")}else{state[key].add(val);el.classList.add("selected")}}}
+function repeatRows(a,b){state.rows=[];a.rows.forEach((r,i)=>{const box=document.createElement("div");box.className="rowbox";box.innerHTML=`<strong>Fila ${i+1}</strong>`;const row=document.createElement("div");row.className="option-row";r.forEach((x,j)=>{const e=document.createElement("button");e.className="option big";e.textContent=x;selectable(e,"r"+i,j);row.appendChild(e)});box.appendChild(row);b.appendChild(box)})}
+function repeatCols(a,b){repeatRows({rows:a.cols},b)}
+function selectTargets(a,b){const g=document.createElement("div");g.className="symbol-grid";a.items.forEach((x,i)=>{const e=document.createElement("div");e.className="symbol";e.textContent=x;selectable(e,"sel",i);g.appendChild(e)});b.appendChild(g)}
+function duplicates(a,b){selectTargets(a,b)}
+function numbersOnly(a,b){selectTargets(a,b)}
+function repeatLetters(a,b){repeatRows({rows:a.rows},b)}
+function sequence(a,b){state.seq=[];a.items.forEach((x,i)=>{const d=document.createElement("div");d.className="sequence-item";const s=document.createElement("select");s.innerHTML='<option value="">—</option>'+a.items.map((_,k)=>`<option>${k+1}</option>`).join("");s.onchange=()=>state.seq[i]=Number(s.value);d.appendChild(s);const t=document.createElement("div");t.textContent=x;d.appendChild(t);b.appendChild(d)})}
+function singleChoice(a,b){const row=document.createElement("div");row.className="option-row";a.options.forEach(x=>{const e=document.createElement("button");e.className="option";e.textContent=x;e.onclick=()=>{state.choice=x;[...row.children].forEach(z=>z.classList.remove("selected"));e.classList.add("selected")};row.appendChild(e)});b.appendChild(row)}
+function oddGroups(a,b){state.groups=[];a.groups.forEach((g,i)=>{const d=document.createElement("div");d.className="rowbox";d.innerHTML=`<strong>Grupo ${i+1}</strong>`;const row=document.createElement("div");row.className="option-row";g.words.forEach(w=>{const e=document.createElement("button");e.className="option";e.textContent=w;e.onclick=()=>{state.groups[i]=w;[...row.children].forEach(z=>z.classList.remove("selected"));e.classList.add("selected")};row.appendChild(e)});d.appendChild(row);b.appendChild(d)})}
+function sentences(a,b){state.sent=a.sets.map(()=>[]);a.sets.forEach((s,i)=>{const d=document.createElement("div");d.className="sentence";d.innerHTML=`<strong>Frase ${i+1}</strong>`;const bank=document.createElement("div");bank.className="wordbank";const line=document.createElement("div");line.className="answerline";s.words.forEach((w,j)=>{const e=document.createElement("span");e.className="word";e.textContent=w;e.onclick=()=>{if(e.dataset.used)return;e.dataset.used="1";e.style.opacity=".35";state.sent[i].push(w);line.textContent=state.sent[i].join(" ")};bank.appendChild(e)});line.onclick=()=>{state.sent[i]=[];line.textContent="";[...bank.children].forEach(e=>{e.dataset.used="";e.style.opacity="1"})};d.appendChild(bank);d.appendChild(line);b.appendChild(d)})}
+function definitions(a,b){state.q=[];a.questions.forEach((q,i)=>{const d=document.createElement("div");d.className="definition";d.innerHTML=`<strong>${i+1}. ${q[0]}</strong>`;const row=document.createElement("div");row.className="option-row";q[2].forEach(x=>{const e=document.createElement("button");e.className="option";e.textContent=x;e.onclick=()=>{state.q[i]=x;[...row.children].forEach(z=>z.classList.remove("selected"));e.classList.add("selected")};row.appendChild(e)});d.appendChild(row);b.appendChild(d)})}
+function sizeMatch(a,b){state.size=[];a.rows.forEach((r,i)=>{const d=document.createElement("div");d.className="size-row";const target=document.createElement("div");target.className="targetbox";target.innerHTML=`<div style="font-size:54px">${r[0]}</div><small>Modelo</small>`;const ch=document.createElement("div");ch.className="choices";r[1].forEach((sz,j)=>{const e=document.createElement("div");e.className="size-choice";e.innerHTML=`<span style="font-size:${sz}px">${r[0]}</span>`;e.onclick=()=>{state.size[i]=j;[...ch.children].forEach(z=>z.classList.remove("selected"));e.classList.add("selected")};ch.appendChild(e)});d.append(target,ch);b.appendChild(d)})}
+function shadowMatch(a,b){state.shadow=[];a.rows.forEach((r,i)=>{const d=document.createElement("div");d.className="size-row";const target=document.createElement("div");target.className="targetbox";target.innerHTML=`<div style="font-size:54px">${r[0]}</div><small>Objeto</small>`;const ch=document.createElement("div");ch.className="choices";r[1].forEach((x,j)=>{const e=document.createElement("div");e.className="size-choice";e.innerHTML=`<span class="shadow">${x}</span>`;e.onclick=()=>{state.shadow[i]=j;[...ch.children].forEach(z=>z.classList.remove("selected"));e.classList.add("selected")};ch.appendChild(e)});d.append(target,ch);b.appendChild(d)})}
+function count(a,b){state.count="";const g=document.createElement("div");g.style.fontSize="42px";g.style.lineHeight="1.7";g.style.textAlign="center";g.textContent=Array(a.count).fill(a.emoji).join(" ");const inp=document.createElement("input");inp.type="number";inp.placeholder="Escribe el total";inp.style.marginTop="18px";inp.oninput=()=>state.count=inp.value;b.append(g,inp)}
+
+function scoreActivity(a){
+ let correct=0,total=0,detail="";
+ if(a.type==="repeatRows"||a.type==="repeatCols"){total=a.answers.length; a.answers.forEach((ans,i)=>{const s=state["r"+i]||new Set();if(ans.length===s.size&&ans.every(x=>s.has(x)))correct++})}
+ else if(a.type==="repeatLetters"){total=a.answers.length;a.answers.forEach((ans,i)=>{const s=state["r"+i]||new Set();if(ans.length===0? s.size===0 : ans.some(letter=>[...s].some(idx=>a.rows[i][idx]===letter)))correct++})}
+ else if(["selectTargets","duplicates"].includes(a.type)){const s=state.sel||new Set();const targetIdx=a.items.map((x,i)=>a.targets.includes(x)?i:-1).filter(i=>i>=0);total=targetIdx.length;correct=targetIdx.filter(i=>s.has(i)).length;const wrong=[...s].filter(i=>!targetIdx.includes(i)).length;correct=Math.max(0,correct-wrong)}
+ else if(a.type==="numbersOnly"){const s=state.sel||new Set();const targetIdx=a.items.map((x,i)=>/^\d$/.test(x)?i:-1).filter(i=>i>=0);total=targetIdx.length;correct=targetIdx.filter(i=>s.has(i)).length;correct=Math.max(0,correct-[...s].filter(i=>!targetIdx.includes(i)).length)}
+ else if(a.type==="sequence"){total=a.correct.length;correct=a.correct.filter((x,i)=>state.seq&&state.seq[i]===x).length}
+ else if(a.type==="singleChoice"){total=1;correct=state.choice===a.correct?1:0}
+ else if(a.type==="oddGroups"){total=a.groups.length;correct=a.groups.filter((g,i)=>state.groups&&state.groups[i]===g.correct).length}
+ else if(a.type==="sentences"){total=a.sets.length;correct=a.sets.filter((s,i)=>norm((state.sent[i]||[]).join(" "))===norm(s.correct)).length}
+ else if(a.type==="definitions"){total=a.questions.length;correct=a.questions.filter((q,i)=>state.q&&state.q[i]===q[1]).length}
+ else if(a.type==="sizeMatch"){total=a.rows.length;correct=a.rows.filter((r,i)=>state.size&&state.size[i]===r[2]).length}
+ else if(a.type==="shadowMatch"){total=a.rows.length;correct=a.rows.filter((r,i)=>state.shadow&&state.shadow[i]===r[2]).length}
+ else if(a.type==="count"){total=1;correct=Number(state.count)===a.count?1:0}
+ return {correct,total,incorrect:total-correct,percent:total?Math.round(correct/total*10000)/100:0,detail};
+}
+document.getElementById("nextBtn").onclick=()=>{
+ const a=sessions[currentSession][activityIndex],r=scoreActivity(a);
+ activityResults.push({page:a.page,title:a.title,...r});
+ if(activityIndex<sessions[currentSession].length-1){activityIndex++;renderActivity()}else finishSession()
+};
+function finishSession(){
+ document.getElementById("runner").classList.add("hidden");document.getElementById("finish").classList.remove("hidden");
+ const sec=(Date.now()-startedAt)/1000, tc=activityResults.reduce((s,r)=>s+r.correct,0), tt=activityResults.reduce((s,r)=>s+r.total,0), pct=tt?Math.round(tc/tt*10000)/100:0;
+ document.getElementById("summary").innerHTML=`<div class="grid grid3"><div class="kpi"><span>Aciertos</span><strong>${tc}/${tt}</strong></div><div class="kpi"><span>Resultado</span><strong>${pct}%</strong></div><div class="kpi"><span>Tiempo</span><strong>${fmt(sec)}</strong></div></div>`+
+ activityResults.map(r=>`<p><b>Página ${r.page}:</b> ${r.correct}/${r.total} (${r.percent}%)</p>`).join("");
+ state.final={time_seconds:Math.round(sec),time_formatted:fmt(sec),total_correct:tc,total_items:tt,total_incorrect:tt-tc,overall_accuracy_percent:pct};
+}
+document.getElementById("sendBtn").onclick=async()=>{
+ const btn=document.getElementById("sendBtn");btn.disabled=true;btn.textContent="Enviando...";
+ const p=participant();
+ const payload={...p,session:currentSession,...state.final,activities:activityResults,timestamp:new Date().toISOString()};
+ const fd=new URLSearchParams();fd.set("data",JSON.stringify(payload));
+ try{
+   await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:fd.toString()});
+   document.getElementById("sendStatus").textContent="✅ Resultados enviados. Revisa la hoja Sesion_"+currentSession+".";
+   btn.textContent="Enviado";
+ }catch(e){document.getElementById("sendStatus").textContent="❌ No fue posible enviar. Verifica tu conexión.";btn.disabled=false;btn.textContent="Enviar resultados"}
+};
+document.getElementById("homeBtn").onclick=()=>location.reload();
+document.getElementById("exitBtn").onclick=()=>{if(confirm("¿Salir de la sesión?"))location.reload()};
 </script>
 </body>
 </html>
